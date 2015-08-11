@@ -48,16 +48,16 @@ class MyScene(scene.Scene):
         self.stroke_color = self.button_blue.background = g_color_blue
 
     def draw(self):
-        scene.background(0,0,0)
+        scene.background(0, 0, 0)
         self.root_layer.update(self.dt)
         self.root_layer.draw()
-        scene.fill(1,1,1)
+        scene.fill(1, 1, 1)
         scene.stroke(*self.stroke_color)
         scene.stroke_weight(4)
-        scene.rect(0,180,320,15)
-        scene.rect(0,290,320,15)
-        scene.rect(92,87,15,310)
-        scene.rect(208,87,15,310)
+        scene.rect(0, 180, 320, 15)
+        scene.rect(0, 290, 320, 15)
+        scene.rect(92, 87, 15, 310)
+        scene.rect(208, 87, 15, 310)
         for l in self.lines:
             scene.line(*l)
 
