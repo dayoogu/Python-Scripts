@@ -9,8 +9,8 @@ class MyScene(scene.Scene):
         scene.run(self)
 
     def setup(self):
-        self.stroke_color = g_color_white
         self.lines = []
+        self.stroke_color = g_color_white
         self.button_blue = self.make_button_blue()
         self.button_red = self.make_button_red()
         self.add_layer(self.button_blue)
