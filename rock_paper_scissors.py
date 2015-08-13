@@ -40,14 +40,17 @@ class rps(Scene):
         self.root_layer.draw()
 
     def rock_action(self):
+        self.button.background = Color(0,0,0,0)
         self.player = '🌚'
         self.computer = random.choice(choices)
 
     def paper_action(self):
+        self.button1.background = Color(0,0,0,0)
         self.player = '📄'
         self.computer = random.choice(choices)
 
     def scissors_action(self):
+        self.button2.background = Color(0,0,0,0)
         self.player = '✂️'
         self.computer = random.choice(choices)
 
