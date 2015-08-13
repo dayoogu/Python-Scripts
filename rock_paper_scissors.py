@@ -3,7 +3,7 @@
 from scene import *
 import random
 
-choices = '🌚', '✋', '✂️'
+choices = '🌚', '📄', '✂️'
 
 class rps(Scene):
     def __init__(self):
