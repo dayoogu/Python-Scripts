@@ -5,6 +5,16 @@ import random
 
 choices = '🌚', '📄', '✂️'
 
+def get_ruling(player_choice, opponent_choice):
+    if player_choice == opponent_choice:
+       return "Draw"
+    elif player_choice == '🌚':
+        return 'Win' if opponent_choice == '✂️' else 'Lose'
+    elif player_choice == '📄':
+        return 'Win' if opponent_choice == '🌚' else 'Lose'
+    else: # player_choice == '✂️'
+        return 'Win' if opponent_choice == '📄' else 'Lose'
+
 class rps(Scene):
     def __init__(self):
         self.player = self.computer = None
