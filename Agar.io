@@ -10,19 +10,8 @@ class Particle(object):
                 self.colour = Color(random(), random(), random())
                 self.cells=Rect(self.x, self.y, 5, 5)
 
-                self.lw=self.w*-1
-                self.rw=self.w
-                self.bh=self.h*-1
-                self.th=self.h
-
         def update(self):
                 self.cells=Rect(self.x, self.y, 5, 5)
-                stroke(0,0,0)
-                stroke_weight(4)
-                line(self.lw, self.bh, self.lw, self.th)
-                line(self.lw, self.th, self.rw, self.th)
-                line(self.rw, self.bh, self.rw, self.th)
-                line(self.lw, self.bh, self.rw, self.bh)
 
         def draw(self):
                 stroke(*self.colour)
@@ -41,8 +30,19 @@ class Bots(object):
                 self.colour = Color(random(), random(), random())
                 self.bsize=8
 
+                self.lw=self.w*-1
+                self.rw=self.w
+                self.bh=self.h*-1
+                self.th=self.h
+
         def update(self):
                 self.attackers=Rect(self.x, self.y, self.bsize, self.bsize)
+                stroke(0,0,0)
+                stroke_weight(4)
+                line(self.lw, self.bh, self.lw, self.th)
+                line(self.lw, self.th, self.rw, self.th)
+                line(self.rw, self.bh, self.rw, self.th)
+                line(self.lw, self.bh, self.rw, self.bh)
 
         def draw(self):
                 fill(*self.colour)
@@ -90,22 +90,23 @@ class Intro(Scene):
                 global plocy
                 global psize
                 for p in self.particles:
-                        if x1 > x and p.lw < plocx:
-                                p.x += 2
-                                p.lw += 2
-                                p.rw += 2
-                        if x1 < x and p.rw > plocx+psize:
-                                p.x += -2
-                                p.lw += -2
-                                p.rw += -2
-                        if y1 > y and p.bh < plocy:
-                                p.y += 2
-                                p.bh += 2
-                                p.th += 2
-                        if y1 < y and p.th > plocy+psize:
-                                p.y += -2
-                                p.bh += -2
-                                p.th += -2
+                        for b in self.bots:
+                                if x1 > x and b.lw < plocx:
+                                        p.x += 2
+                                        b.lw += 0.04
+                                        b.rw += 0.04
+                                if x1 < x and b.rw > plocx+psize:
+                                        p.x += -2
+                                        b.lw += -0.04
+                                        b.rw += -0.04
+                                if y1 > y and b.bh < plocy:
+                                        p.y += 2
+                                        b.bh += 0.04
+                                        b.th += 0.04
+                                if y1 < y and b.th > plocy+psize:
+                                        p.y += -2
+                                        b.bh += -0.04
+                                        b.th += -0.04
 
         def draw(self):
                 global count
