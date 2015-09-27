@@ -1,6 +1,8 @@
-
+#By: Adedayo Ogunnoiki ft [cclauss]
 from scene import *
 from random import *
+import sys
+import console
 
 class Particle(Rect):
         def __init__(self, wh):
@@ -91,6 +93,10 @@ class Intro(Scene):
                                         b.bh += -0.04
                                         b.th += -0.04
 
+        def die(self):
+                sys.exit()
+                console.clear()
+
         def draw(self):
                 global attackx, attackx, count, plocx, plocy, psize
                 if count == 1:
@@ -105,7 +111,7 @@ class Intro(Scene):
                                 self.particles.remove(p)
                                 psize += 0.2
                                 for p in range(1):
-                                                self.particles.append(Particle(self.size))
+                                        self.particles.append(Particle(self.size))
                 for b in self.bots:
                         b.update()
                         b.draw()
@@ -124,6 +130,13 @@ class Intro(Scene):
                                         b.bsize+=0.2
                                         for p in range(1):
                                                 self.particles.append(Particle(self.size))
+
+                                if self.player.intersects(b.attackers):
+                                        if b.bsize > psize:
+                                                self.die()
+                                        if psize > b.bsize:
+                                                psize += b.bsize
+
 
                 self.player = Rect(plocx, plocy, psize, psize)
                 stroke(*self.colour)
