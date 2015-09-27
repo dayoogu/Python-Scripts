@@ -104,7 +104,7 @@ class Intro(Scene):
                         if self.player.intersects(p.cells):
                                 self.particles.remove(p)
                                 psize += 0.2
-                                for p.cells in range(1):  # !?!
+                                for p in range(1):
                                                 self.particles.append(Particle(self.size))
                 for b in self.bots:
                         b.update()
