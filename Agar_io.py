@@ -1,7 +1,6 @@
 #By: Adedayo Ogunnoiki
 from scene import *
 from random import *
-import sys
 
 class Particle(Rect):
 	def __init__(self, wh):
@@ -52,73 +51,80 @@ class Intro(Scene):
 		self.rw=self.size.w
 		self.bh=self.size.h*-1
 		self.th=self.size.h
-		
-		self.split = Button(Rect(self.size.w/8, self.size.h/16, 80, 80))
-		self.split.background = Color(0,0,0,0)
-		self.split.stroke = Color(0,0,0,0)
-		self.split.image = 'ionicons-code-working-24'
-		self.split.action = self.split_player
-		self.add_layer(self.split)
-		
-	def split_player(self):
-		if self.psize/2 > 10:
-			print("yas, bitch yas")
-
+		self.points = self.psize
+	
 	def touch_began(self, touch):
-		global x1, y1
-		x1, y1 = touch.location
+		self.x1, self.y1 = touch.location
 
 	def touch_moved(self, touch):
-		global x, y
-		x, y = touch.location
+		self.x, self.y = touch.location
 		self.count = 1
 
 	def movecells(self):
-		global x, y, x1, y1, particlew, particleh
 		for p in self.particles:
-			if x1 > x and self.lw < self.plocx:
-				p.x += 2
-				self.lw += 0.04
-				self.rw += 0.04
-				particlew += 0.04
-
-			if x1 < x and self.rw > self.plocx:
-				p.x -= 2
-				self.lw -= 0.04
-				self.rw -= 0.04
-				particlew -= 0.04
-
-			if y1 > y and self.bh < self.plocy:
-				p.y += 2
-				self.bh += 0.04
-				self.th += 0.04
-				particleh += 0.04
-	
-			if y1 < y and self.th > self.plocy:
-				p.y -= 2
-				self.bh -= 0.04
-				self.th -= 0.04
-				particleh -= 0.04
-		
-			for b in self.bots:
-				if b.x > self.rw:
-					b.x -= 1
-				elif b.x < self.lw:
-					b.x += 1
-				if b.y < self.bh:
-					b.y += 1
-				elif b.y > self.th:
-					b.y -= 1
+			p.update()
+			if self.x > self.x1:
+				addx=(self.x-self.x1)/30
+				self.newcellx=p.x+addx
+			if self.x < self.x1:
+				subx=(self.x-self.x1)/30
+				self.newcellx=p.x+subx
+			if self.y > self.y1:
+				addy=(self.y-self.y1)/30
+				self.newcelly=p.y+addy
+			if self.y < self.y1:
+				suby=(self.y-self.y1)/30
+				self.newcelly=p.y+suby
+			
+			while self.newcellx != p.x and self.newcellx > p.x and self.lw < self.plocx:
+				p.x += 1
+				self.lw += 0.02
+				self.rw += 0.02
+				
+			while self.newcellx != p.x and self.newcellx < p.x and self.rw > self.plocx:
+				p.x-= 1
+				self.lw -= 0.02
+				self.rw -= 0.02
+				
+			while self.newcelly != p.y and self.newcelly > p.y and self.bh < self.plocy:
+				p.y += 1
+				self.bh += 0.02
+				self.th += 0.02
+				
+			while self.newcelly != p.y and self.newcelly < p.y and self.th > self.plocy:
+				p.y -= 1
+				self.bh -= 0.02
+				self.th -= 0.02
+				
+		for b in self.bots:
+			if b.x > self.rw:
+				b.x -= 2
 					
+			elif b.x < self.lw:
+				b.x += 2
+					
+			if b.y < self.bh:
+				b.y += 2
+					
+			elif b.y > self.th:
+				b.y -= 2
+				
 	def keep_in_bounds(self):
+		global attackx, attacky
 		for p in self.particles:
 			p.update()
 			p.draw()	
-			if p.x > self.rw or p.x < self.lw or p.y > self.th or p.y < self.bh:
+			if attackx > self.rw or attackx < self.lw or attacky > self.th or attacky < self.bh:
 				self.particles.remove(p)
 				for p in range(1):
 					self.particles.append(Particle(self.size))
 					
+	def bound_block(self):
+		rect(self.rw+self.psize, self.bh-self.size.h/2, self.size.w, self.size.h*3)
+		rect(self.lw-self.size.w/2, self.bh-self.size.h/2, self.size.w/2, self.size.h*3)
+		rect(self.lw-self.size.w/2, self.bh-self.size.h/2, self.size.w*3, self.size.h/2)
+		rect(self.lw, self.th+self.psize, self.size.w*2+self.psize, self.size.h/2)
+	
 	def bots_life(self):
 		for b in self.bots:
 			b.update()
@@ -135,7 +141,7 @@ class Intro(Scene):
 			for p in self.particles:
 				if b.attackers.intersects(p.cells):
 					self.particles.remove(p)
-					b.bsize+=0.5
+					b.bsize += 0.5
 					for p in range(1):
 						self.particles.append(Particle(self.size))
 					self.keep_in_bounds()
@@ -145,14 +151,12 @@ class Intro(Scene):
 						self.die()
 					if int(self.psize) > int(b.bsize):
 						self.psize += b.bsize
-					
+						
 	def die(self):
 		sys.exit()
-		
+				
 	def draw(self):
 		background(0.00, 0.05, 0.20)
-		self.split.background = Color(0,0,0,0)
-		self.split.draw()
 		global attackx, attackx
 		self.plocx = self.size.w/2 - self.psize/2
 		self.plocy = self.size.h/2 - self.psize/2
@@ -164,6 +168,7 @@ class Intro(Scene):
 			if self.player.intersects(p.cells):
 				self.particles.remove(p)
 				self.psize += 0.2
+				self.points += 1
 				for p in range(1):
 					self.particles.append(Particle(self.size))
 				self.keep_in_bounds()
@@ -171,8 +176,11 @@ class Intro(Scene):
 		self.player = Rect(self.plocx, self.plocy, self.psize, self.psize)
 		fill(*self.colour)
 		ellipse(*self.player)
+		fill(0,0,0)
+		self.bound_block()
+		text('Score: %i' % self.points, x=self.size.w/4, y=self.size.h/4*3.6, font_size=20)
 		
 	def should_rotate(self, orientation):
 		return True
-		
+	
 run(Intro())
